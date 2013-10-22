@@ -1,0 +1,18 @@
+{% extends 'master.html' %}
+{% block body %}
+
+<h1>Wall Posts for user {{id}}</h1>
+<div id="wall_posts">
+    {% for post in wall_posts %}
+    
+        <ul><li>Owner ID: {{post[5]}}</li>
+        <li>Author ID: {{post[6]}}</li>
+        <li>Date: {{post[3]}}</li>
+        <li>Content: {{post[4]}}</li></ul>
+     
+    {% endfor %}
+
+
+</div>
+
+{% endblock %}
