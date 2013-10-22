@@ -1,7 +1,7 @@
 {% extends 'master.html' %}
 {% block body %}
 
-<h1>Wall Posts for user {{id}}</h1>
+<h1>Wall Posts for user {{username}}</h1>
 <div id="wall_posts">
     {% for post in wall_posts %}
     
@@ -12,7 +12,18 @@
      
     {% endfor %}
 
-
 </div>
+
+<div id = "post_to_wall">
+    {% if user_id %}
+    <form>
+        <input type="text" class="form-control" placeholder="What do you want write?" name="username">
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+
+    </form>
+    {% else %}
+        <h3>Please log in to post.</h3>
+    {% endif %}
+
 
 {% endblock %}
