@@ -42,7 +42,19 @@ def clear_session():
 
 @app.route("/register")
 def register():
+    if session.get('id', None) != None:
+        user_id = (session['id'])
+        username = model.given_id_return_name(user_id)
+        return redirect(url_for("view_user", username=username))
+    else:
+        return render_template("register.html")
+
+    """reg_username = request.form.get('username')
+    reg_id = model.given_name_return_id(reg_username)
+    if session.get(reg_id):
+        return redirect(url_for("view_user", username = reg_username))    
     return render_template("register.html")
+    """
 
 @app.route("/user/<username>")
 def view_user(username):
@@ -50,5 +62,17 @@ def view_user(username):
     wall_posts = model.wall_posts(username)
     return render_template("wall.html", wall_posts = wall_posts, username = username, user_id =session.get('id', None))
 
+#username of the wall's owner
+@app.route("/user/<username>", methods=["POST"])
+def post_to_wall(username):
+    content = request.form.get('post')
+    if content:
+        author_id = session.get('id', None)
+        model.add_wall_post(username, author_id, content)
+        
+    else:
+        flash("Message field is empty!")
+
+    return redirect(url_for("view_user", username = username))
 if __name__ == "__main__":
     app.run(debug = True)

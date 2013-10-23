@@ -1,29 +1,38 @@
 {% extends 'master.html' %}
 {% block body %}
 
-<h1>Wall Posts for user {{username}}</h1>
-<div id="wall_posts">
+<h1>{{username}}'s wall</h1>
+<div id="posts_content">
     {% for post in wall_posts %}
     
-        <ul><li>Owner ID: {{post[5]}}</li>
-        <li>Author ID: {{post[6]}}</li>
-        <li>Date: {{post[3]}}</li>
-        <li>Content: {{post[4]}}</li></ul>
+        <p>Owner ID: {{post[5]}}<br/>
+        Author ID: {{post[6]}}<br/>
+        Date: {{post[3]}}<br/>
+        <strong>Content: {{post[4]}}</strong></p>
      
     {% endfor %}
 
 </div>
 
-<div id = "post_to_wall">
-    {% if user_id %}
-    <form>
-        <input type="text" class="form-control" placeholder="What do you want write?" name="username">
-        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
 
+<div id = "submit_container">
+    {% if user_id %}
+    <form class="submit_form" method="POST">
+        {% for message in get_flashed_messages() %}
+        <p>{{ message }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" placeholder="What do you want to write?" name="post">
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+     
     </form>
+   
+
+
     {% else %}
         <h3>Please log in to post.</h3>
     {% endif %}
 
+
+</div>
 
 {% endblock %}

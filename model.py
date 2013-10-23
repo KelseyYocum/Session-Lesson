@@ -3,6 +3,7 @@ ADMIN_PASSWORD=5980025637247534551
 import sqlite3
 DB = None
 CONN = None
+import datetime
 
 def connect_to_db():
     global DB, CONN
@@ -26,15 +27,28 @@ def given_name_return_id(username):
     query = """SELECT id FROM users WHERE username = ?"""
     DB.execute(query, (username,))
     row = DB.fetchone()
-    print row[0]
     return row[0]
 
+def given_id_return_name(user_id):
+    query = """SELECT username FROM users WHERE id = ?"""
+    DB.execute(query, (user_id,))
+    row = DB.fetchone()
+    return row[0]
+
+#extracting wallposts
 def wall_posts(username):
     query = """SELECT P.*, O.username AS owner_name, A.username AS author_name FROM wall_posts AS P INNER JOIN users AS O ON (P.owner_id = O.id) INNER JOIN users AS A ON (P.author_id = A.id) WHERE O.username = ?"""
     DB.execute(query, (username,))
     rows = DB.fetchall()
-    print rows
     return rows
+
+#username of the owner, id of the author
+def add_wall_post(username, author_id, content):
+    owner_id = given_name_return_id(username)
+    query = """INSERT INTO wall_posts (owner_id, author_id, created_at, content) VALUES (?, ?, ?, ?)"""
+    result = DB.execute(query, (owner_id, author_id, datetime.datetime.now(), content))
+    CONN.commit()
+    print "Post successful! %r " % result
 
 def main():
     # connect_to_db()

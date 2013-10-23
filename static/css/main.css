@@ -16,5 +16,13 @@ form.signin input.form-control {
 }
 
 form.signin input.btn {
-    margin-top: 15px;
+    margin: 50px auto;
+}
+
+form.submit_form{
+    width: 330px;
+    margin: 50px auto;
+}
+#posts_content {
+    margin: 50px auto;
 }
