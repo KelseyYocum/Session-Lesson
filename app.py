@@ -31,9 +31,10 @@ def process_login():
     if user_id != None:
         flash("User authenticated!")
         session['id'] = user_id
+        return redirect(url_for ("view_user", username = username))
     else:
         flash("Password incorrect, there may be a ferret stampede in progress!")
-    return redirect(url_for ("view_user", username = username))
+        return redirect(url_for("index"))
 
 @app.route("/clear")
 def clear_session():
@@ -49,18 +50,27 @@ def register():
     else:
         return render_template("register.html")
 
-    """reg_username = request.form.get('username')
-    reg_id = model.given_name_return_id(reg_username)
-    if session.get(reg_id):
-        return redirect(url_for("view_user", username = reg_username))    
-    return render_template("register.html")
-    """
+@app.route("/register", methods=["POST"])
+def create_account():
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    if model.given_name_return_id(username):
+        flash("You already have an account!")
+        return redirect(url_for("index"))
+    else:
+        model.create_account(username, password)
+        flash ("You have successfully created an account!")
+        return redirect(url_for("index"))
 
 @app.route("/user/<username>")
 def view_user(username):
-
-    wall_posts = model.wall_posts(username)
-    return render_template("wall.html", wall_posts = wall_posts, username = username, user_id =session.get('id', None))
+    if model.given_name_return_id(username):
+        wall_posts = model.wall_posts(username)
+        return render_template("wall.html", wall_posts = wall_posts, username = username, user_id =session.get('id', None))
+    else:
+        flash("Sorry, this user is not registered yet.")
+        return redirect(url_for("index"))    
 
 #username of the wall's owner
 @app.route("/user/<username>", methods=["POST"])

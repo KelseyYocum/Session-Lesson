@@ -15,8 +15,11 @@ def authenticate(username, password):
     hashed_pass = hash(password)
     DB.execute(query, (username, hashed_pass))
     row = DB.fetchone()
-    print row[0]
-    return row[0] #fetching id
+    if row:
+        return row[0]
+    else:
+        return None
+   
 
     #if username == ADMIN_USER and hash(password) == ADMIN_PASSWORD:
     #    return ADMIN_USER
@@ -27,13 +30,24 @@ def given_name_return_id(username):
     query = """SELECT id FROM users WHERE username = ?"""
     DB.execute(query, (username,))
     row = DB.fetchone()
-    return row[0]
+    if row:
+        return row[0]
+    else:
+        return None
 
 def given_id_return_name(user_id):
     query = """SELECT username FROM users WHERE id = ?"""
     DB.execute(query, (user_id,))
     row = DB.fetchone()
-    return row[0]
+    if row:
+        return row[0]
+    else:
+        return None
+
+def create_account(username, password):
+    query = """INSERT INTO users (username, password) VALUES (?, ?)"""
+    DB.execute(query, (username, hash(password)))
+    CONN.commit()
 
 #extracting wallposts
 def wall_posts(username):
